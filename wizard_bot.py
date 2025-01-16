@@ -1,4 +1,5 @@
 import logging
+import random
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, InlineKeyboardButton, InlineKeyboardMarkup)
 from telegram.ext import (Application, CallbackQueryHandler, CommandHandler, ContextTypes, ConversationHandler, MessageHandler, filters)
 import os
@@ -7,8 +8,35 @@ from dotenv import load_dotenv
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger('wizard_bot')
 
+predictionsRu = [
+  'Безусловно',
+  'Абсолютно точно',
+  'Никаких сомнений',
+  'Определенно да',
+  'Можешь положиться на это',
+  'Мне кажется да',
+  'Скорее всего',
+  'Перспективы неплохи',
+  'Знаки говорят да',
+  'Да',
+  'Пока не ясно, попробуй снова',
+  'Спроси позже',
+  'Не хочу об этом сейчас',
+  'Сейчас не могу сказать',
+  'Подумай и спроси снова',
+  'Даже не думай',
+  'Мой ответ: нет',
+  'По моим данным нет',
+  'Перспективы не очень хороши',
+  'Очень сомневаюсь'
+]
+
+
 async def msg(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("А?")
+    a = len(predictionsRu)
+    b = random.randint(0, a - 1)
+    await update.message.reply_text(predictionsRu[b])
+    
 
 def main() -> None:
     load_dotenv()
@@ -19,5 +47,5 @@ def main() -> None:
     application.run_polling()
     
 
-if __name__ == 'main':
-    main()
+
+main()
