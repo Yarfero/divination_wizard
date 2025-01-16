@@ -1,7 +1,7 @@
 import logging
 import random
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, InlineKeyboardButton, InlineKeyboardMarkup)
-from telegram.ext import (Application, CallbackQueryHandler, CommandHandler, ContextTypes, ConversationHandler, MessageHandler, filters)
+from telegram import Update
+from telegram.ext import (Application, CommandHandler, ContextTypes, MessageHandler, filters)
 import os
 from dotenv import load_dotenv
 
@@ -30,7 +30,12 @@ predictionsRu = [
   'Перспективы не очень хороши',
   'Очень сомневаюсь'
 ]
+introduction = "Вы в присутствии настоящего предсказателя! \
+Я могу ответить на любой вопрос на который можно ответить да или нет,\
+ но только если вы обращаетесь ко мне 'Волшебник'."
 
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(introduction)   
 
 async def msg(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     a = len(predictionsRu)
@@ -43,6 +48,7 @@ def main() -> None:
     api_key = os.getenv("API_KEY")
     """Run the bot."""
     application = Application.builder().token(api_key).build()
+    application.add_handler(CommandHandler("start", start_command))
     application.add_handler(MessageHandler(filters.Regex(r"^Волшебник"), msg))
     application.run_polling()
     
